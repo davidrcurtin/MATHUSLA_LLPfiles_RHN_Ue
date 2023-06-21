@@ -1,5 +1,5 @@
 # MATHUSLA_LLPfiles_RHN
-LLP production and decay files for simulation of heavy neutral lepton LLP production (Ue, Umu or Utau dominance) at the HL-LHC and decay in the MATHUSLA (or other transverse LLP) detector
+LLP production and decay files for simulation of heavy neutral lepton LLP production (Ue, Umu or Utau dominance) at the HL-LHC and decay in the MATHUSLA (or other transverse LLP) detector 
 
 
 By David Curtin and Jaipratap Grewal, Jun 2023
@@ -8,9 +8,7 @@ BENCHMARK MODEL:
 
 heavy neutral leptons (HNL) (also called right-handed neutrinos RHN) added to SM. Our main reference for model, production, and decay is 1805.08567. 
 
-In generality, there are three HNL N1, N2, N3 which each can mix with active neutrinos v_e, v_mu, v_tau neutrinos, via a 3x3 mixing matrix U_ij. We consider three simplified scenarios corresponding to the PBC benchmark points BC6,7,8 in 1901.09966, where we consider one RHN LLP, N, which has mixing Ue with v_e only, or mixing U_mu with v_mu only, or mixing U_tau with v_tau only.
-
-The relevant files for each of these benchmark models are formatted identically and are found in the RHN_Ue,mu,tau subfolders. 
+In generality, there are three HNL N1, N2, N3 which each can mix with active neutrinos v_e, v_mu, v_tau neutrinos, via a 3x3 mixing matrix U_ij. We consider three simplified scenarios corresponding to the PBC benchmark points BC6,7,8 in 1901.09966, where we consider one RHN LLP, N, which has mixing Ue with v_e only, or mixing U_mu with v_mu only, or mixing U_tau with v_tau only. In the below, UX refers to U_e, U_mu or U_tau depending on which benchmark model is being used. The files for the three benchmark models are identically formatted, so usage is the same. 
 
 Each of these three simplified models has two free parameters:
 - LLP mass mN
@@ -20,42 +18,51 @@ We concentrate on mN < 5 GeV.
 
 The most important production modes above 0.1 GeV are exotic D and B meson decays, but DY production (pp>W/Z>N+X) and tau-lepton decays to N are also important. 
 
-RHN LLPs by inheriting all SM couplings of the active neutrino it mixes with, suppressed by mixing U. 
+RHN LLPs inherit all SM couplings of the active neutrino it mixes with, suppressed by mixing U. Therefore, N decays via weak decays N -> l+ W* or v Z*, with W*/Z* > SM fermions. 
+
+
+AVAILABLE LLP MASSES:
+==================
+
+The easiest way to get a list of the available mN values in each benchmark model is to look at the numerical suffixes of the RHN_Umu_LLPweight4vectorWZlist_mN_YYY files. These production modes are available for all considered mN, and hence these files are always present for all considered mN. 
+
+
 
 
 LLP PRODUCTION:
 =================
 
-Four production modes for the RHN N are separately considered: B meson decay, D meson decay, tau decay, and DY production via W*/Z*. B/D-decay is the most important, but the EW production modes matter for higher masses/shorter lifetimes. 
+Four production modes for the RHN N are separately considered: B meson decay, D meson decay, tau decay, and DY production via W*/Z*. B/D-decay is the most important, but the EW production modes are important to extend sensitivity for higher masses/shorter lifetimes. 
 
 
 (1) B/D decay to RHN
 
-FONLL was used to calculate double-differential production cross sections ds/dpTdy for B and D mesons at the HL-LHC, which are used to simulate unweighted B-meson momentum vectors from the IP, see Appendix A1. The BtoNbr_UX.pdf and DtoNBr_UX.pdf pdf figures show the branching ratio of B and D mesons to N calculated following 1805.08567. Each exclusive decay was simulated using full 2- and 3-body decay kinematics to turn the simulated B/D-meson 4-vectors into LLP 4-vectors for each different LLP mass mN. 
+FONLL was used to calculate double-differential production cross sections ds/dpTdy for B and D mesons at the HL-LHC, which are used to simulate unweighted B-meson momentum vectors from the IP, see Appendix A1. The BtoNbr_UX.pdf and DtoNBr_UX.pdf figures show the branching ratio of B and D mesons to N calculated following 1805.08567. Each exclusive decay was simulated using full 2- and 3-body decay kinematics to turn the simulated B/D-meson 4-vectors into LLP 4-vectors for each different LLP mass mN. 
 
 Each of the files 
 RHN_UX_LLPweight4vectorDmesonlist_mN_YYY.csv, 
 RHN_UX_LLPweight4vectorBmesonlist_mN_YYY.csv 
-in the All_RHN_UX_LLPweight4vectors_from_BDWZtau subdirectory contain a set of WEIGHTED LLP 4-vectors for that mass mN = YYYY (in GeV). (This is because each B/D 4-vector is decayed separately depending on whether it could represent a B0, B+, etc, which all have  different decays to N.)
+in the All_RHN_UX_LLPweight4vectors_from_BDWZtau subdirectory contain a set of WEIGHTED LLP 4-vectors for that mass mN = YYYY (in GeV). (This is because each B/D 4-vector is decayed separately depending on whether it could represent a B0, B+, Bs, Bc, D0, D+, which all have  different decays to N.)
 Note that the phi-angles around the beam axis of these LLPs are not physically distributed, since it is assumed that LLP 4-vectors will be rotated randomly around the beam axis prior to being shot towards MATHUSLA (see instructions below). These files have format (weight, E, pX, pY, pZ) with Z = beam axis. 
 
 For each B/D decay event, the weight represents (0.5) * (the number of LLPs that a single 4-vector represents for Usq = 1), so simply multiply that weight by (2 * Usq) to get the real number of LLP Production events represented by the sample. 
 
-WARNING 1: note the required factor of 2. This is because the factor of 2 needed to obtain the number of produced B-mesons from the FONLL cross section was not included in these event weights (sorry).
+WARNING 1: note the required factor of 2. This is because the factor of 2 needed to obtain the number of produced B-mesons from the FONLL cross section was not included in these event weights (sorry). This factor of 2 is NOT required in the weights for electorweak production events. 
 
 WARNING 2: Note that this weight is set assuming you use all 4-vectors in the file. If you use some number N_MC events < the total number N_total in the file, the weights should be multiplied by 
 (2 * Usq * N_total/N_MC) 
-so they still represent the actual number of LLPs produced at the LHC. This is OK since the different weights just correspond to different B/D-species, and hence there are only a limited number of different 'kinds' of weights that keep repeating in the file. If the different weights were representing kinematic properties, we should not just take the N_total/N_MC ratio but instead the ratio of total vs used weights.
+so they still represent the actual number of LLPs produced at the LHC. 
+(This is OK since the different weights just correspond to different B/D-species, and hence there are only a limited number of different 'kinds' of weights that keep repeating in the file. If the different weights were representing kinematic properties, we should not just take the N_total/N_MC ratio but instead the ratio of total vs used weights.)
 
 
-NB: If mN is too large to permit N production in D decay, then there will be no corresponding decay file. 
+NB: If mN is too large to permit N production in D decay, then there will be no corresponding decay file. For all considered mN, B decay to N is always open, except for a few higher mass points in the Utau scenario. In this case, those B decay files are blank with a size of 1 byte, rather than missing.
 
 
 (2) Tau decay
 
 Madgraph was used to simulate tau production at the HL-LHC, see Appendix A2. 
 
-The TautoNbr_UX.pdf figure shows the branching ratio(s) of tau to N calculated following 1805.08567. Each exclusive decay was simulated using full 2- and 3-body decay kinematics to turn the simulated tau-lepton 4-vectors into LLP 4-vectors for each different LLP mass mN. 
+The TautoNbr_UX.pdf figure shows the branching ratio(s) of tau to N calculated following 1805.08567. Each exclusive decay was simulated using full 2- and 3-body decay kinematics (but not angular dependencies in the matrix element) to turn the simulated tau-lepton 4-vectors into LLP 4-vectors for each different LLP mass mN. 
 
 Each of the files 
 RHN_UX_LLPweight4vectorTaulist_mN_YYYY.csv
@@ -99,17 +106,17 @@ For a displaced vertex analysis, it is important to approximately capture the hi
 
 - For low masses below the multi-hadron threshold (0.42 GeV for Ue and Utau dominated, 0.53 GeV for Umu dominated) we compute exclusive decay branching fractions following 1805.08567. See RHNBrUX_exclusive.pdf for the exclusive branching fractions. N decay events are generated using 2- and 3-body decay kinematics in the N restframe. 
 
-- For higher masses above the multi-hadron threshold, the Madgraph5 and the model SM_HeavyN_CKM_AllMasses_LO are used to decay N's via the respective mixing, then hadronize in Pythia8, extract N decay products and save in N restframe. Care is taken to define the parton-level decay processes to only allow hadronic final states that are kinematically accessible for a given N mass mN. Above ~ GeV, the partonic decay branching ratios in RHNBrUX_partonic.pdf (also computed following 1805.08567) should be reasonably reliable. More details on how these decays were generated is below in A.3. 
+- For higher masses above the multi-hadron threshold, Madgraph5 and the model SM_HeavyN_CKM_AllMasses_LO are used to decay N's via the respective mixing, then hadronize in Pythia8, extract detector-stable N decay products and save in N restframe. Care is taken to define the parton-level decay processes to only allow hadronic final states that are kinematically accessible for a given N mass mN. (Above ~ GeV, the partonic decay branching ratios simulated by the madgraph model, shown in in RHNBrUX_partonic.pdf which was also computed following 1805.08567, should be reasonably reliable.) More details on how these decays were generated is below in A.3. 
 
 
 Unweighted decay events are supplied in the LLP restframe in the RHN_UX_hadronic_decays_geant subdirectory. There is one file for each LLP mass mN indicated in the file name suffix, with the file name text indicating the method of generating these decay events. Each file contains all decay modes in the appropriate proportions. In each file, different decay events are separated by two blank lines. 
 The first row of each event block is the original LLP 4-vector used in the simulation. This can be ignored (since the simulation used for LLP decays does not match the kinematic distribution of actual LLP production at the HL-LHC.)
 Subsequent rows contain lists of LLP decay final states IN THE LLP RESTFRAME, in format 
-E, pX, pY, pZ, mass, PID, particle name. note not all PIDs have a 'particle name' entry, that column is just for convenience. 
+E, pX, pY, pZ, mass, PID, particle name. Note not all PIDs have a 'particle name' entry, that column is just for convenience. 
 
 
 
-Note: The precise N branching fractions in the ~ 0.5 -  2 GeV mN window are subject to significant uncertainties, but the actual effect on reconstruction efficiencies should not be major, you can estimate it by comparing efficiency at 0.5 vs 2 GeV. Since reconstruction efficiency should increase roughly monotonically with mass, the difference between the start and end of the hadronic uncertainty window should give an idea of the relative uncertainty within the window. 
+Note: The precise N branching fractions in the ~ 0.5 -  2 GeV mN window are subject to significant uncertainties, but the actual effect on DV reconstruction efficiencies should not be major, you can estimate it by comparing efficiency at 0.5 vs 2 GeV. Since reconstruction efficiency should increase roughly monotonically with mass, the difference between the start and end of the hadronic uncertainty window should give an idea of the relative uncertainty within the window. 
 
 
 
